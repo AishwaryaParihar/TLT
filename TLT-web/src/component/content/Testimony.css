@@ -1,0 +1,38 @@
+.slick-dots {
+    bottom: -50px; /* Adjust this value to position the dots below the carousel */
+  }
+  
+  .slick-dots li button:before {
+    font-size: 12px; /* Adjust the size of the dots if needed */
+  }
+  
+  .slick-dots li.slick-active button:before {
+    color: #FF0000; /* Change the color of the active dot if needed */
+  }
+
+  /* Limit the visible dots to only 3 */
+.testimony-slider .slick-dots li {
+    display: none; /* Hide all dots by default */
+  }
+  
+  .testimony-slider .slick-dots li.slick-active,
+  .testimony-slider .slick-dots li.slick-active + li,
+  .testimony-slider .slick-dots li.slick-active + li + li {
+    display: inline-block; /* Show the active dot and the next two dots */
+  }
+  
+  /* Ensure the dots container is centered */
+  .testimony-slider .slick-dots {
+    display: flex !important;
+    justify-content: center;
+  }
+  
+  .truncated-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 5; /* Number of lines to show */
+    line-clamp: 5; /* For compatibility with non-webkit browsers */
+    line-height: 1.5em; /* Line height should be the same as used in max-height */
+  }

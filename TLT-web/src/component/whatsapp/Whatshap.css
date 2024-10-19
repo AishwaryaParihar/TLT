@@ -1,0 +1,42 @@
+
+.whatsapp-img {
+  position: fixed;
+  height: 42px;
+  width: 42px;
+  
+  border-radius: 90%;
+ margin-bottom: 0px;
+ margin-top:50px ;
+ z-index: 99999; 
+ 
+}
+
+/* Default positioning for larger screens */
+.whatsapp-img {
+
+  top: calc(100% - 130px); 
+  left: calc(100% - 50px); 
+}
+
+/* For tablets */
+@media (max-width: 768px) {
+  .whatsapp-img {
+    position: fixed;
+    top: calc(100% - 95px); 
+    left: calc(100% - 95px); 
+    height: 40px;
+    width: 40px;
+  }
+}
+
+/* For mobile phones */
+@media (max-width: 480px) {
+  .whatsapp-img {
+    position: fixed;
+    top: calc(100% - 80px);
+    left: calc(100% - 60px); 
+    height: 38px;
+    width: 38px;
+  }
+}
+

@@ -1,0 +1,247 @@
+.card_style{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width:290px;
+    height: 340px;
+    color: black;
+    position: relative;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  @media (max-width:732px){
+    .card_style{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+      color: black;
+      position: relative;
+      cursor: pointer;
+      margin: 10px;
+    }
+  }
+  
+  .card_style .content{
+  width: 100%;
+  height: 100%;
+  background: #ffffff17;
+  /* backdrop-filter: blur(20px); */
+  border: 1px solid #fff;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 0 30px #0000000d;
+  transition:all 0.4s ;
+  padding: 5px;
+  padding-block: 15px;
+  
+  }
+  
+  .card_style .content .description{
+    margin-block: 10px;
+    font-weight: 600;
+    font-size: 14px;
+  text-align: center;
+  
+  }
+  
+  
+  .card_style .content .title{
+    margin-block: 10px;
+    font-weight: 600;
+    font-size: 18px;
+  text-align: center;
+  background-color: white;
+  color:rgb(239 68 68);
+  padding-inline: 15px;
+  border-radius: 220px;
+  }
+  
+  .card_style .price{
+  color:white;
+  font-weight: 700;
+  font-size: 20px;
+  margin-block: 7px;
+
+  }
+  .card_style .buy{
+  color:rgb(239 68 68);
+  font-weight: 700;
+  font-size: 15px;
+  margin-block: 2px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 3px 7px;
+  margin-bottom: 4px;
+  margin-top: 17px;
+  
+  }
+  .card_style:hover .buy{
+    color:white;
+    background-color: rgb(239 68 68);
+  }
+  .card_style .icons{
+    border-radius: 50%;
+    padding: 12px;
+    background-color: white;;
+  }
+
+  .card_style .icons_div{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    height: 90px;
+    padding: 15px;
+  }
+  
+  .card_style:hover .icons_div{
+    background-color: white;
+    border-bottom: 2px dashed rgb(239 68 68);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
+    height:90px;
+    padding: 15px;
+  }
+  
+
+  
+  .card_style:hover .price{
+    color:rgb(239 68 68);
+    font-weight: 700;
+    font-size: 20px;
+    margin-block: 10px;
+  }
+  
+  .card_style:hover .content{
+    color: #171717;
+    font-weight: 400;
+  }
+  
+  .card_style::before,.card_style::after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background-color: rgb(239 68 68);
+    z-index: -20;
+    transition:all 0.4s ;
+  }
+  
+  .card_style::before{
+    top: 0;
+    right: 0;
+  }
+  
+  .card_style::after{
+    bottom: 0;
+    left: 0;
+  }
+  
+  .card_style:hover::before{
+    width: 50px;
+    height: 50px;
+    transform: translate(20px,-20px);
+    border-radius: 50%;
+  }
+  
+  .card_style:hover::after{
+    width: 100px;
+    height: 100px;
+    transform: translate(-20px,20px);
+    border-radius: 50%;
+  }
+  
+  
+
+
+  /* Modal overlay to cover the whole screen */
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+}
+
+/* Modal content for displaying the product details and form */
+.modal_content {
+  background: white;
+  border-radius: 8px;
+  max-width: 600px; /* Adjust size */
+  width: 100%;
+  position: relative;
+  z-index: 1001;
+  height: 97%;
+}
+
+/* Close button for the modal */
+.close_button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background-color: transparent;
+  border: none;
+  font-size: 44px;
+  cursor: pointer;
+}
+
+/* Form container */
+.tpm_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 90%;
+}
+
+/* Form field styling */
+.tpm_form input, .tpm_form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Submit button styling */
+.tpm_form button {
+  background-color: #ef4444;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tpm_form button:hover {
+  background-color: #d33a3a;
+}
+
+
+/* Adjust modal responsiveness */
+@media (max-width: 768px) {
+  .modal_content {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .tpm_form input, .tpm_form textarea {
+    width: 100%;
+  }
+}
+

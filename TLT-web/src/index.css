@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.partial-border {
+  position: relative;
+}
+
+.partial-border::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50px;
+  transform: translateX(-50%);
+  height: 4px; /* Border thickness */
+  width: 100px; /* Border length */
+  background-color: #ef4444; /* Border color */
+}
+
+.full-border {
+  position: relative;
+}
+
+.full-border::before {
+  content: '';
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 4px; /* Border thickness */
+  width: 300px; /* Border length */
+  background-color: #000;
+}
+@media (max-width: 1024px) {
+  .full-border::before {
+    width: 250px; /* Adjust border length */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 768px) {
+  .full-border::before {
+    width: 200px;
+    left: 30%; /* Reduced border length for small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .full-border::before {
+    width: 200px;
+    left: 50%; /* Further reduced border length for very small screens */
+  }
+}
+
+select option {
+  background-color: #f87171; /* Tailwind's red-400 color */
+  color: white;
+}
+
+.jinput {
+  width: 90%;
+  height: 40px;
+  outline-color: rgb(239, 68, 68);
+}
+
+.jinput:focus::placeholder {
+  color: white;
+}
+
+.jinput:focus {
+  outline-offset: 2px;
+  outline-width: 2px;
+  outline-color: rgb(239, 68, 68);
+  width: 90%;
+  height: 40px;
+  background-color: rgb(239, 68, 68);
+  color: white;
+}
+
+@media (max-width: 700px) {
+  .jinput:focus {
+    outline-offset: 2px;
+    outline-width: 2px;
+    width: 90%;
+    height: 30px;
+    outline-color: rgb(239, 68, 68);
+    background-color: rgb(239, 68, 68);
+    color: white;
+  }
+}
+
+@media (max-width: 700px) {
+  .jinput {
+    width: 90%;
+    height: 30px;
+  }
+}
+
+.aboutMentor {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1024px) {
+  .aboutMentor {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .aboutMentor {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@keyframes zoom {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.zoom-in-out {
+  animation: zoom 2s infinite;
+}
+
+.banner1 {
+  background-image: url(assets/banner1.webp);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  aspect-ratio: 16/9;
+}
+
+.banner2 {
+  background-image: url('assets/banner2.webp');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 600px;
+  aspect-ratio: 16/9;
+}
+
+.banner3 {
+  background-image: url(assets/banner3.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 600px;
+  aspect-ratio: 16/9;
+}
+
+.galleryContainer {
+  width: 95%;
+  /* height: 100vh; */
+  position: relative;
+  margin: 0 auto;
+}
+
+.galleryContainer .media-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin: 20px auto;
+}
+.galleryContainer .media-container .media-image {
+  height: 220px;
+  width: 100%;
+  border: 5px solid #0f0f22;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.galleryContainer .media-container .media img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: all 0.3s linear;
+}
+
+.galleryContainer .media-container .media:hover :is(img) {
+  transform: scale(1.1);
+}
+
+.galleryContainer .popup-media {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+}
+
+.galleryContainer .popup-media img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  max-width: 95%;
+  max-height: 95%;
+  object-fit: contain;
+  border: 5px solid #fff;
+}
+
+.galleryContainer .popup-media span {
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  font-size: 50px;
+  font-weight: bold;
+  z-index: 100;
+  cursor: pointer;
+  color: #fff;
+  user-select: none;
+}
