@@ -35,7 +35,8 @@
     "slick-carousel": "^1.8.1",
     "state-cities": "^1.0.6",
     "vite": "^5.3.5",
-    "@vitejs/plugin-react": "^4.3.3"
+    "@vitejs/plugin-react": "^4.3.3",
+        "tailwindcss": "^3.4.6"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -45,7 +46,7 @@
     "eslint-plugin-react": "^7.34.2",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.6"
+    "postcss": "^8.4.39"
+
   }
 }
