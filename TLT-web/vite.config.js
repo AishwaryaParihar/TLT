@@ -7,6 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     rollupOptions: {
+      external: ['react-phone-input-2'],
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
