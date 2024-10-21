@@ -1,5 +1,5 @@
-// const backendDomain = "https://tlt-project-1-backend02.onrender.com";
-const backendDomain = 'http://localhost:8080';
+// const backendDomain = "https://sea-lion-app-uytpg.ondigitalocean.app";
+const backendDomain = 'https://sea-lion-app-uytpg.ondigitalocean.app';
 
 const SummaryApi = {
   fastTrackForm: {
@@ -211,7 +211,6 @@ const SummaryApi = {
     url: `${backendDomain}/api/quizUser`,
     method: 'post',
   },
- 
 };
 
 export default SummaryApi;

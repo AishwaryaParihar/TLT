@@ -6,7 +6,6 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
 
-
 const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [editData, setEditData] = useState({});
@@ -20,7 +19,9 @@ const StudentList = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/getStudents');
+      const response = await axios.get(
+        'https://sea-lion-app-uytpg.ondigitalocean.app/api/getStudents'
+      );
       setStudents(response.data);
     } catch (err) {
       toast.error('Failed to fetch students');
@@ -30,7 +31,9 @@ const StudentList = () => {
   const deleteStudent = async (id) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
       try {
-        await axios.delete(`http://localhost:8080/api/deleteStudent/${id}`);
+        await axios.delete(
+          `https://sea-lion-app-uytpg.ondigitalocean.app/api/deleteStudent/${id}`
+        );
         toast.success('Student deleted successfully!');
         fetchStudents();
       } catch (err) {
@@ -49,7 +52,10 @@ const StudentList = () => {
   const updateStudent = async (id) => {
     if (window.confirm('Are you sure you want to update this student?')) {
       try {
-        await axios.put(`http://localhost:8080/api/updateStudent/${id}`, editData[id]);
+        await axios.put(
+          `https://sea-lion-app-uytpg.ondigitalocean.app/api/updateStudent/${id}`,
+          editData[id]
+        );
         setEditMode(null); // Exit edit mode
         fetchStudents(); // Fetch updated data
         toast.success('Student updated successfully!');
@@ -152,7 +158,7 @@ const StudentList = () => {
                     <td className="py-2 px-4 text-gray-600">
                       {editMode === student._id ? (
                         <input
-                          type="text"    
+                          type="text"
                           name="course"
                           value={editData[student._id]?.course || ''}
                           onChange={(e) => handleChange(e, student._id)}
