@@ -27,7 +27,10 @@ const TpmData = () => {
         method: SummaryApi.TpmData.method,
       });
       if (result.status === 200) {
-        setTpmData(result.data);
+         const sortedData = result.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setTpmData(sortedData);
       } else {
         toast.error(result.data.message || 'Failed to fetch data');
       }

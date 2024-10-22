@@ -19,7 +19,11 @@ const EmpowermentForm = () => {
           method: SummaryApi.EmpowermentAdmin.method,
         });
         console.log(result);
-        setEmpowermentData(result.data.data || []);
+        const fetchedData= result.data.data || [];
+        const sortedData = fetchedData.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setEmpowermentData(sortedData);
       } catch (error) {
         console.error('Error fetching data:', error);
         setEmpowermentData([]);

@@ -12,8 +12,12 @@ const QuizUserForm = () => {
             try{
                 let data = await fetch(SummaryApi.QuizDetailsGet.url)
                 let dataJson = await data.json()
-                setData(dataJson.data)
-                console.log("dataJson==>",dataJson)
+                const sortedData = dataJson.data.sort(
+                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                  );
+            
+                  setData(sortedData);
+                  console.log("dataJson==>", sortedData);
                 
             }
             catch(e){

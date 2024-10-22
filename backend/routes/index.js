@@ -119,6 +119,7 @@ const {
 
 //Student import link
 const signUpController = require('../controllers/student/signUpController');
+const { getStudentProfile } = require('../controllers/student/studentProfile');
 
 // Static file setup
 router.use('/files', express.static('files'));
@@ -350,5 +351,6 @@ router.delete('/deleteStudent/:id', signUpController.deleteStudent);
 
 //student login routes
 router.post('/login', signUpController.loginStudent);
+router.get('/student-profile', authToken, getStudentProfile)
 
 module.exports = router;

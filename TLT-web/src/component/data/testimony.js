@@ -48,7 +48,7 @@ export const data = [
     name: "Rishabh K Sharma",
     rank: "Rank - 17 Jammu & Kashmir Judicial Services",
     image: testImg6,
-    desc: "I have qualified the J&amp;K Civil Judge examination with 17th Rank. And your role is remarkable in this whole journey.Shubham Sir, You are the reason behind this success. Specifically, your rapid revision videos were instrumental. ",
+    desc: "I have qualified the J&K Civil Judge examination with 17th Rank. And your role is remarkable in this whole journey.Shubham Sir, You are the reason behind this success. Specifically, your rapid revision videos were instrumental. ",
   },
   {
     id: 7,
@@ -57,12 +57,12 @@ export const data = [
     image: testImg7,
     desc: "Hi sir. This is Shraddha Srivastava. I just wanted to let you know that I cleared DJS and secured a rank of 48. I really wanted to thank you for the mock interview session and being a part of the process. It turned out to be very helpful.",
   },
-  {
-    id: 8,
-    name: "Rishabh K Sharma",
-    rank: "Rank - 17 Jammu & Kashmir Judicial Services",
-    image: testImg6,
-    desc: "I have qualified the J&amp;K Civil Judge examination with 17th Rank. And your role is remarkable in this whole journey.Shubham Sir, You are the reason behind this success. Specifically, your rapid revision videos were instrumental. ",
-  },
+  // {
+  //   id: 8,
+  //   name: "Rishabh K Sharma",
+  //   rank: "Rank - 17 Jammu & Kashmir Judicial Services",
+  //   image: testImg6,
+  //   desc: "I have qualified the J&amp;K Civil Judge examination with 17th Rank. And your role is remarkable in this whole journey.Shubham Sir, You are the reason behind this success. Specifically, your rapid revision videos were instrumental. ",
+  // },
 
 ];

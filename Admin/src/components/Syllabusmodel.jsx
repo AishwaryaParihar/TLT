@@ -20,7 +20,10 @@ const Syllabusmodel = () => {
         method: SummaryApi.GetAllSyllabusModel.method,
       });
       if (Array.isArray(result.data.data)) {
-        setAllPapers(result.data.data);
+        const sortedPapers = result.data.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setAllPapers(sortedPapers);
       } else {
         console.error('Unexpected data format:', result.data.data);
         setAllPapers([]);

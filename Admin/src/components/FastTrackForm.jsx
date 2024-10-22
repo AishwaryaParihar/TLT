@@ -19,7 +19,14 @@ const FastTrackForm = () => {
     const getData = async () => {
       try {
         const result = await axios(SummaryApi.FastTractFormAdmin);
-        setFastTrackData(result.data.fastTrackFormData || []);
+        const fetchedData = result.data.fastTrackFormData || [];
+
+        // Sort the data by the createdAt field in descending order (most recent first)
+        const sortedData = fetchedData.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+  
+        setFastTrackData(sortedData);
       } catch (error) {
         console.error('Error fetching data:', error);
         setFastTrackData([]);

@@ -4,6 +4,7 @@ import Login from '../Pages/Login';
 import SignUp from '../Pages/SingUp';
 import Sidebar from '../Components/Sidebar';
 import LeaderBoard from '../Components/LeaderBoard';
+import StudentProfile from '../Components/StudentProfile';
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
           {
             path: 'leaderboard',
             element: <LeaderBoard />,
+          },
+          {
+            path: 'profile',
+            element: <StudentProfile />,
           },
         ],
       },

@@ -22,7 +22,10 @@ const EnquiryList = () => {
         method: SummaryApi.getEnquiryDetails.method,
       });
       if (result.status === 200) {
-        setEnquiries(result.data);
+        const sortedData = result.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setEnquiries(sortedData);
       } else {
         toast.error(result.data.message || 'Failed to fetch enquiries');
       }

@@ -24,7 +24,10 @@ const JetFormDetails = () => {
         url: SummaryApi.JetFormGet.url,
         method: SummaryApi.JetFormGet.method,
       });
-      setFormData(result.data.jetForms);
+      const sortedData = result.data.jetForms.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setFormData(sortedData);
     } catch (error) {
       toast.error('Error fetching data.');
     }

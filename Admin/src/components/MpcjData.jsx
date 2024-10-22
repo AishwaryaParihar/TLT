@@ -26,7 +26,10 @@ const MpcjData = () => {
       console.log('API Response:', result.data);
   
       if (Array.isArray(result.data)) {
-        setMpcjData(result.data);
+        const sortedPapers = result.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setMpcjData(sortedPapers);
       } else {
         console.error('Unexpected data format:', result.data);
         setMpcjData([]);
