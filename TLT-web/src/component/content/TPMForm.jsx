@@ -32,10 +32,10 @@ const TPMForm = ({ selectedProduct }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Basic validation
     const valid = data.name && data.email && data.contact && data.purchasedProduct;
-
+  
     if (valid) {
       try {
         const response = await fetch(SummaryApi.createTpmFormDetails.url, {
@@ -45,19 +45,24 @@ const TPMForm = ({ selectedProduct }) => {
           },
           body: JSON.stringify(data),
         });
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+  
+        // If the response is not JSON, treat it as a string (URL)
+        const result = await response.text(); // Use text() instead of json()
+        
+        // Check if the result is a URL (PhonePe payment URL)
+        if (response.ok && result.startsWith("http")) {
+          window.location.href = result; // Redirect to the payment page
+        } else {
+          // Handle case when it's JSON (though it's unlikely here)
+          console.log("Response:", result);
+          toast.success("Form submitted successfully!");
+          setData({
+            name: "",
+            email: "",
+            contact: "",
+            purchasedProduct: "",
+          });
         }
-
-        const result = await response.json();
-        console.log("Form submitted successfully: ", result);
-        toast.success("Form submitted successfully!");
-        setData({
-          name: "",
-          email: "",
-          contact: "",
-          purchasedProduct: "",
-        });
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
         toast.error("There was a problem submitting the form. Please try again.");
@@ -66,6 +71,7 @@ const TPMForm = ({ selectedProduct }) => {
       toast.error("Please fill in all the fields.");
     }
   };
+  
 
   return (
     <div className="form-container mx-5">

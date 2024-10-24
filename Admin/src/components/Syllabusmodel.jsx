@@ -10,9 +10,11 @@ const Syllabusmodel = () => {
   const [editMode, setEditMode] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
   useEffect(() => {
     fetchAllPapers();
   }, []);
+
   const fetchAllPapers = async () => {
     try {
       const result = await axios({
@@ -34,12 +36,11 @@ const Syllabusmodel = () => {
     }
   };
 
-  // Delete paper data with confirmation
   const deletePaper = async (id) => {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this paper?'
     );
-    if (!confirmDelete) return; // Exit if user cancels
+    if (!confirmDelete) return;
     try {
       await axios({
         url: SummaryApi.DeleteSyllabusModel.url.replace(':id', id),
@@ -50,12 +51,12 @@ const Syllabusmodel = () => {
       console.error('Error deleting paper:', error);
     }
   };
-  // Update paper data with confirmation
+
   const updatePaper = async (id) => {
     const confirmUpdate = window.confirm(
       'Are you sure you want to save the changes?'
     );
-    if (!confirmUpdate) return; // Exit if user cancels
+    if (!confirmUpdate) return;
     try {
       await axios({
         url: SummaryApi.UpdateSyllabusModel.url.replace(':id', id),
@@ -88,24 +89,30 @@ const Syllabusmodel = () => {
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Pagination numbers logic
+  const getPaginationNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        pageNumbers.push(i);
+      } else if (pageNumbers[pageNumbers.length - 1] !== '...') {
+        pageNumbers.push('...');
+      }
+    }
+    return pageNumbers;
+  };
+
   // Export to Excel function
   const exportToExcel = () => {
     const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(allPapers); // Convert data to worksheet
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      'Previous Year Paper Form Data'
-    ); // Add worksheet to workbook
-    XLSX.writeFile(workbook, 'previousYearPaper_data.xlsx'); // Trigger the file download
+    const worksheet = XLSX.utils.json_to_sheet(allPapers);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Previous Year Paper Form Data');
+    XLSX.writeFile(workbook, 'previousYearPaper_data.xlsx');
   };
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">
-        Previous Year Paper Details
-      </h1>
-      {/* Export to Excel Button */}
+      <h1 className="text-2xl font-semibold mb-4">Syllabus Model Form Data</h1>
       <button
         onClick={exportToExcel}
         className="mb-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -132,14 +139,10 @@ const Syllabusmodel = () => {
               <tbody>
                 {currentPapers.map((paper, index) => (
                   <tr
-                    className={`border-b border-gray-200 ${
-                      index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                    } hover:bg-gray-100`}
+                    className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-gray-100`}
                     key={paper._id}
                   >
-                    <td className="py-2 px-4 text-gray-600">
-                      {indexOfFirstItem + index + 1}
-                    </td>
+                    <td className="py-2 px-4 text-gray-600">{indexOfFirstItem + index + 1}</td>
                     <td className="py-2 px-4 text-gray-600">
                       {editMode === paper._id ? (
                         <input
@@ -222,19 +225,29 @@ const Syllabusmodel = () => {
 
             {/* Pagination Controls */}
             <div className="flex justify-center mt-4">
-              {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
+                disabled={currentPage === 1}
+                className={`mx-1 px-3 py-1 border rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
+              >
+                Previous
+              </button>
+              {getPaginationNumbers().map((number, index) => (
                 <button
-                  key={i}
-                  onClick={() => handlePageChange(i + 1)}
-                  className={`mx-1 px-3 py-1 border rounded ${
-                    currentPage === i + 1
-                      ? 'bg-blue-900 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                  }`}
+                  key={index}
+                  onClick={() => handlePageChange(number)}
+                  className={`mx-1 px-3 py-1 border rounded ${number === currentPage ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 hover:bg-blue-100'}`}
                 >
-                  {i + 1}
+                  {number}
                 </button>
               ))}
+              <button
+                onClick={() => handlePageChange(currentPage < totalPages ? currentPage + 1 : totalPages)}
+                disabled={currentPage === totalPages}
+                className={`mx-1 px-3 py-1 border rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-700'}`}
+              >
+                Next
+              </button>
             </div>
           </>
         )}

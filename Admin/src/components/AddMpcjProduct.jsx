@@ -3,6 +3,8 @@ import axios from 'axios';
 import SummaryApi from '../Common/SummaryApi';
 import { FaEdit, FaTrash } from 'react-icons/fa'; // Import Font Awesome icons
 
+const ITEMS_PER_PAGE = 5; // Number of products to display per page
+
 const AddMpcjProduct = () => {
   const [productData, setProductData] = useState({
     title: '',
@@ -12,7 +14,7 @@ const AddMpcjProduct = () => {
 
   const [products, setProducts] = useState([]); // State to hold the list of products
   const [editingProductId, setEditingProductId] = useState(null); // State for the product being edited
-
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -107,6 +109,61 @@ const AddMpcjProduct = () => {
     }
   };
 
+  // Calculate total pages
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+
+  // Calculate the products for the current page
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const currentProducts = products.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // Render pagination controls
+  const renderPagination = () => {
+    const pagination = [];
+
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - 1 && i <= currentPage + 1)
+      ) {
+        pagination.push(
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i)}
+            className={`px-3 py-1 border rounded ${currentPage === i ? 'bg-blue-500 text-white' : 'bg-white'}`}
+          >
+            {i}
+          </button>
+        );
+      } else if (
+        (pagination[pagination.length - 1] && pagination[pagination.length - 1].props.children !== '...') &&
+        (i === currentPage - 2 || i === currentPage + 2)
+      ) {
+        pagination.push(<span key={i}>...</span>);
+      }
+    }
+
+    return (
+      <div className="flex space-x-2 mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-3 py-1 border rounded bg-white hover:bg-gray-200"
+        >
+          Previous
+        </button>
+        {pagination}
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 border rounded bg-white hover:bg-gray-200"
+        >
+          Next
+        </button>
+      </div>
+    );
+  };
+
   // Render
   return (
     <div className="flex flex-col items-center mt-8">
@@ -151,9 +208,9 @@ const AddMpcjProduct = () => {
 
       {/* Render product list */}
       <div className="mt-8 w-full shadow-md p-5 mx-8 ">
-        <h2 className="text-lg font-bold underline">Product List : </h2>
+        <h2 className="text-lg font-bold underline">Product List:</h2>
         <ul className="mt-4 border-gray-300 rounded-lg">
-          {products.map((product) => (
+          {currentProducts.map((product) => (
             <li key={product._id} className="flex justify-between items-center p-4 border-b">
               <div>
                 <h3 className="font-semibold"><span className='font-semibold text-red-500'>Title: </span>{product.title}</h3>
@@ -176,6 +233,9 @@ const AddMpcjProduct = () => {
           ))}
         </ul>
       </div>
+
+      {/* Render pagination controls */}
+      {renderPagination()}
     </div>
   );
 };
