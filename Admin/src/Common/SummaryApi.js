@@ -1,6 +1,6 @@
 // const backendDomain = "https://sea-lion-app-uytpg.ondigitalocean.app";
-const backendDomain = 'https://sea-lion-app-uytpg.ondigitalocean.app';
-// const backendDomain = 'http://localhost:8080';
+// const backendDomain = 'https://sea-lion-app-uytpg.ondigitalocean.app';
+const backendDomain = 'http://localhost:8080';
 
 const SummaryApi = {
   signUp: {
@@ -366,22 +366,30 @@ const SummaryApi = {
     url: `${backendDomain}/api/studentsexcel`,
     method: 'post',
   },
+
+    // student list
   getStudents: {
     url: `${backendDomain}/api/getStudents`,
     method: 'post',
   },
-  getStudents: {
-    url: `${backendDomain}/api/getStudents`,
-    method: 'post',
-  },
+  // getStudents: {
+  //   url: `${backendDomain}/api/getStudents`,
+  //   method: 'post',
+  // },
   updateStudent: {
     url: `${backendDomain}/api/updateStudent/:id`,
     method: 'put',
   },
-  deleteStudent: {
+  deleteStudentdata: {
     url: `${backendDomain}/api/deleteStudent/:id`,
     method: 'delete',
   },
+ 
+  getStudentList: {
+    url: `${backendDomain}/api/getStudents`,
+    method: 'get',
+  },
+
 
   //Subadmin controllers
   signUp: {
