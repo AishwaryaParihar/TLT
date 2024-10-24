@@ -1,5 +1,5 @@
-// const backendDomain = "https://sea-lion-app-uytpg.ondigitalocean.app";
 const backendDomain = 'https://sea-lion-app-uytpg.ondigitalocean.app';
+// const backendDomain = 'https://sea-lion-app-uytpg.ondigitalocean.app';
 // const backendDomain = 'http://localhost:8080';
 
 const SummaryApi = {

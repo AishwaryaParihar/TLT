@@ -16,11 +16,30 @@ const LeaderboardUpload = () => {
     const excelSheet = excelFile.Sheets[excelFile.SheetNames[0]];
     const excelJson = xlsx.utils.sheet_to_json(excelSheet);
 
-    const updatedData = excelJson.map((student) => ({
-      ...student,
-      batch: selectedBatch,
-      batchSection: selectedBatchSection,
-    }));
+    const updatedData = excelJson
+      .map((student) => {
+        if (!student.Email) {
+          console.error('Missing Email for student:', student);
+          return null; // or handle it as you prefer
+        }
+
+        return {
+          Name: student.Name,
+          Email: student.Email,
+          Course: student.Course,
+          Batch: selectedBatch,
+          BatchSection: selectedBatchSection,
+          SaturdayMainsTest: student.SaturdayMainsTest,
+          MCQ: student.MCQ,
+          GroupDiscussion: student.GroupDiscussion,
+          JudgmentWriting: student.JudgmentWriting,
+          Translation: student.Translation,
+          Badge: student.Badge || 'None',
+          CreatedAt: student.CreatedAt || Date.now(),
+        };
+      })
+      .filter(Boolean); // Removes any null entries
+
     setExcelData(updatedData);
     storeData(updatedData);
   };
