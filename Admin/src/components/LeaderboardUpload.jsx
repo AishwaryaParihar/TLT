@@ -16,31 +16,31 @@ const LeaderboardUpload = () => {
     const excelSheet = excelFile.Sheets[excelFile.SheetNames[0]];
     const excelJson = xlsx.utils.sheet_to_json(excelSheet);
 
-    // const updatedData = excelJson
-    //   .map((student) => {
-    //     if (!student.Name) {
-    //       console.error('Missing Name for student:', student);
-    //       return null; // or handle it as you prefer
-    //     }
+    const updatedData = excelJson
+      .map((student) => {
+        if (!student.Name) {
+          console.error('Missing Name for student:', student);
+          return null;
+        }
 
-    //     return {
-    //       Name: student.Name,
-    //       Course: student.Course,
-    //       Batch: selectedBatch,
-    //       BatchSection: selectedBatchSection,
-    //       SaturdayMainsTest: student.SaturdayMainsTest,
-    //       MCQ: student.MCQ,
-    //       GroupDiscussion: student.GroupDiscussion,
-    //       JudgmentWriting: student.JudgmentWriting,
-    //       Translation: student.Translation,
-    //       Badge: student.Badge || 'None',
-    //       CreatedAt: student.CreatedAt || Date.now(),
-    //     };
-    //   })
-    //   .filter(Boolean); // Removes any null entries
+        return {
+          Name: student.Name,
+          Course: student.Course,
+          Batch: selectedBatch,
+          BatchSection: selectedBatchSection,
+          SaturdayMainsTest: student.SaturdayMainsTest,
+          MCQ: student.MCQ,
+          GroupDiscussion: student.GroupDiscussion, // Ensure this matches the schema
+          JudgmentWriting: student.JudgmentWriting,
+          Translation: student.Translation,
+          Badge: student.Badge || 'None',
+          CreatedAt: student.CreatedAt || Date.now(),
+        };
+      })
+      .filter(Boolean);
 
-    setExcelData(excelJson);
-    storeData(excelJson);
+    setExcelData(updatedData);
+    storeData(updatedData);
   };
 
   const storeData = async (data) => {

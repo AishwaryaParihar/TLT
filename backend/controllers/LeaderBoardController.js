@@ -1,7 +1,6 @@
 const LeaderBoardSchema = require('../models/LeaderboardModel');
 
 const createLeaderboard = async (req, res) => {
-  console.log('Received data:', req.body); // Log the incoming data
   const students = req.body;
 
   if (!Array.isArray(students)) {
@@ -11,7 +10,22 @@ const createLeaderboard = async (req, res) => {
   }
 
   try {
-    const results = await LeaderBoardSchema.insertMany(students);
+    const results = [];
+
+    for (const student of students) {
+      // Check if the student already exists
+      const existingStudent = await LeaderBoardSchema.findOne({
+        Name: student.Name,
+        Course: student.Course,
+      });
+      if (existingStudent) {
+        console.log(`Duplicate entry found for ${student.Name}. Skipping.`);
+        continue; // Skip this entry if it already exists
+      }
+
+      results.push(await LeaderBoardSchema.create(student));
+    }
+
     res.status(201).json(results);
   } catch (error) {
     console.error('Error saving student details:', error);

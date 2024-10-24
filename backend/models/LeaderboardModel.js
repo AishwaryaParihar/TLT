@@ -22,22 +22,25 @@
 
 const mongoose = require('mongoose');
 
-const studentSchema = new mongoose.Schema({
-  Name: { type: String, required: true },
-  Course: { type: String, required: true },
-  Batch: { type: String },
-  BatchSection: { type: String },
-  SaturdayMainsTest: { type: Number, default: 0 },
-  MCQ: { type: Number, default: 0 },
-  GroupDiscussion: { type: Number, default: 0 },
-  JudgmentWriting: { type: Number, default: 0 },
-  Translation: { type: Number, default: 0 },
-  Badge: {
-    type: String,
-    enum: ['Gold', 'Silver', 'Bronze', 'None'],
-    default: 'None',
+const studentSchema = new mongoose.Schema(
+  {
+    Name: { type: String, required: true },
+    Course: { type: String, required: true },
+    Batch: { type: String },
+    BatchSection: { type: String },
+    SaturdayMainsTest: { type: Number },
+    MCQ: { type: Number },
+    GroupDiscussion: { type: Number },
+    JudgmentWriting: { type: Number },
+    Translation: { type: Number },
+    Badge: {
+      type: String,
+      enum: ['Gold', 'Silver', 'Bronze', 'None'],
+      default: 'None',
+    },
   },
-});
+  { collection: 'leaderboardstudents' }
+);
 
 const LeaderboardStudent = mongoose.model('LeaderboardStudent', studentSchema);
 module.exports = LeaderboardStudent;
