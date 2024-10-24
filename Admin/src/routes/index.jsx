@@ -155,7 +155,7 @@ export const router = createBrowserRouter([
             path: 'studentList',
             element: <StudentList />,
           },
-        ]
+        ],
       },
       {
         path: 'subAdminDashboard',
@@ -267,7 +267,7 @@ export const router = createBrowserRouter([
             path: 'studentList',
             element: <StudentList />,
           },
-        ]
+        ],
       },
     ],
   },

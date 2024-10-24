@@ -16,32 +16,31 @@ const LeaderboardUpload = () => {
     const excelSheet = excelFile.Sheets[excelFile.SheetNames[0]];
     const excelJson = xlsx.utils.sheet_to_json(excelSheet);
 
-    const updatedData = excelJson
-      .map((student) => {
-        if (!student.Email) {
-          console.error('Missing Email for student:', student);
-          return null; // or handle it as you prefer
-        }
+    // const updatedData = excelJson
+    //   .map((student) => {
+    //     if (!student.Name) {
+    //       console.error('Missing Name for student:', student);
+    //       return null; // or handle it as you prefer
+    //     }
 
-        return {
-          Name: student.Name,
-          Email: student.Email,
-          Course: student.Course,
-          Batch: selectedBatch,
-          BatchSection: selectedBatchSection,
-          SaturdayMainsTest: student.SaturdayMainsTest,
-          MCQ: student.MCQ,
-          GroupDiscussion: student.GroupDiscussion,
-          JudgmentWriting: student.JudgmentWriting,
-          Translation: student.Translation,
-          Badge: student.Badge || 'None',
-          CreatedAt: student.CreatedAt || Date.now(),
-        };
-      })
-      .filter(Boolean); // Removes any null entries
+    //     return {
+    //       Name: student.Name,
+    //       Course: student.Course,
+    //       Batch: selectedBatch,
+    //       BatchSection: selectedBatchSection,
+    //       SaturdayMainsTest: student.SaturdayMainsTest,
+    //       MCQ: student.MCQ,
+    //       GroupDiscussion: student.GroupDiscussion,
+    //       JudgmentWriting: student.JudgmentWriting,
+    //       Translation: student.Translation,
+    //       Badge: student.Badge || 'None',
+    //       CreatedAt: student.CreatedAt || Date.now(),
+    //     };
+    //   })
+    //   .filter(Boolean); // Removes any null entries
 
-    setExcelData(updatedData);
-    storeData(updatedData);
+    setExcelData(excelJson);
+    storeData(excelJson);
   };
 
   const storeData = async (data) => {
@@ -115,6 +114,7 @@ const LeaderboardUpload = () => {
           <thead>
             <tr className="bg-red-500 text-white transition-all hover:shadow-md">
               <th className="py-4 px-4 border-b border-red-300">Name</th>
+
               <th className="py-4 px-4 border-b border-red-300">Badge</th>
               <th className="py-4 px-4 border-b border-red-300">
                 Saturday Mains Test
@@ -146,6 +146,8 @@ const LeaderboardUpload = () => {
                   {getBadgeIcon(student.badge)}
                   <span className="ml-2 font-semibold">{student.badge}</span>
                 </td>
+                <td className="py-4 px-4 text-navy-800">{student.Course}</td>
+
                 <td className="py-4 px-4 text-navy-800">
                   {student.saturdayMainsTest}
                 </td>

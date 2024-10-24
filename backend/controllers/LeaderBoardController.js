@@ -41,12 +41,12 @@ const getAllLeaderboard = async (req, res) => {
 // Update a paper detail
 const updateLeaderboard = async (req, res) => {
   const { id } = req.params;
-  const { number, email, name } = req.body;
+  const { number, name } = req.body;
 
   try {
     const updatedPaper = await LeaderBoardSchema.findByIdAndUpdate(
       id,
-      { number, email, name },
+      { number, name },
       { new: true }
     );
     if (!updatedPaper) {
