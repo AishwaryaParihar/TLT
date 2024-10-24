@@ -95,9 +95,9 @@ const SignUp = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500"
               >
                 <option value="">Select Batch</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
               </select>
             </div>
             <div className="w-full">

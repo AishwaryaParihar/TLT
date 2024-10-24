@@ -9,6 +9,8 @@ const EnquiryList = () => {
   const [enquiries, setEnquiries] = useState([]);
   const [editData, setEditData] = useState({});
   const [editMode, setEditMode] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const itemsPerPage = 5; // Number of items per page
 
   useEffect(() => {
     fetchEnquiries();
@@ -82,16 +84,27 @@ const EnquiryList = () => {
     setEditData({ [id]: enquiries.find((enquiry) => enquiry._id === id) });
   };
 
+  // Calculate total pages
+  const totalPages = Math.ceil(enquiries.length / itemsPerPage);
+
+  // Get current items to display
+  const currentItems = enquiries.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  // Handle page change
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <div className="max-w-6xl mx-auto mt-10">
       <ToastContainer />
       <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Enquiries List</h2>
 
       {enquiries.length > 0 ? (
-        <div className="overflow-x-auto">
+        <div>
           <table className="min-w-full table-auto border-collapse border border-gray-300">
             <thead>
-              <tr className="bg-gray-200">
+              <tr>
                 <th className="px-6 py-3 border-b border-gray-300 text-left text-gray-600">S.No</th>
                 <th className="px-6 py-3 border-b border-gray-300 text-left text-gray-600">Name</th>
                 <th className="px-6 py-3 border-b border-gray-300 text-left text-gray-600">Email</th>
@@ -104,9 +117,9 @@ const EnquiryList = () => {
               </tr>
             </thead>
             <tbody>
-              {enquiries.map((enquiry, index) => (
+              {currentItems.map((enquiry, index) => (
                 <tr key={enquiry._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 border-b border-gray-300">{index+1}</td>
+                  <td className="px-6 py-4 border-b border-gray-300">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td className="px-6 py-4 border-b border-gray-300">
                     {editMode === enquiry._id ? (
                       <input
@@ -138,7 +151,7 @@ const EnquiryList = () => {
                   <td className="px-6 py-4 border-b border-gray-300">{enquiry.batch}</td>
                   <td className="px-6 py-4 border-b border-gray-300">{enquiry.status}</td>
                   <td className="px-6 py-4 border-b border-gray-300">{enquiry.foundUs}</td>
-                  <td className="px-6 py-4 border-b border-gray-300 flex gap-2">
+                  <td className="px-6 py-4 border-b border-gray-300 ">
                     {editMode === enquiry._id ? (
                       <>
                         <button
@@ -175,9 +188,53 @@ const EnquiryList = () => {
               ))}
             </tbody>
           </table>
+          
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+            >
+              Previous
+            </button>
+
+            {/* Page Numbers */}
+            <div className="flex space-x-2">
+              {currentPage > 2 && (
+                <>
+                  <span onClick={() => handlePageChange(1)} className="cursor-pointer">1</span>
+                  <span className="text-gray-500">...</span>
+                </>
+              )}
+              {Array.from({ length: totalPages }, (_, index) => (
+                <span
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`cursor-pointer ${currentPage === index + 1 ? 'font-bold bg-blue-600 text-white px-2' : ''}`}
+                >
+                  {index + 1}
+                </span>
+              ))}
+              {currentPage < totalPages - 1 && (
+                <>
+                  <span className="text-gray-500">...</span>
+                  <span onClick={() => handlePageChange(totalPages)} className="cursor-pointer">{totalPages}</span>
+                </>
+              )}
+            </div>
+
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </div>
       ) : (
-        <p className="text-center text-gray-600">No enquiries found.</p>
+        <div className="text-center text-gray-500">No enquiries found.</div>
       )}
     </div>
   );

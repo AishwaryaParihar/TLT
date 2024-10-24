@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { FaMedal, FaClipboardList, FaComment } from 'react-icons/fa';
-import axios from 'axios';
 import SummaryApi from '../Common/Summary';
+import axios from 'axios';
 
-const LeaderBoard = () => {
+const LeaderBoard = ({ course, batch }) => {
+  // Accept course and batch as props
   const [sortedData, setSortedData] = useState([]);
 
   useEffect(() => {
     fetchLeaderboard();
-  }, []);
+  }, [course, batch]); // Fetch data whenever course or batch changes
 
   const fetchLeaderboard = async () => {
     try {
       const result = await axios({
         url: SummaryApi.GetleaderBoard.url,
         method: SummaryApi.GetleaderBoard.method,
+        params: {
+          course: course, // Pass course from props
+          batch: batch, // Pass batch from props
+        },
       });
+      console.log(result);
+
       if (Array.isArray(result.data.data)) {
-        const sorted = result.data.data.sort((a, b) => a.score - b.score);
+        const sorted = result.data.data.sort((a, b) => b.score - a.score); // Sort by score descending
         setSortedData(sorted);
       } else {
         console.error('Unexpected data format:', result.data.data);
@@ -45,7 +52,7 @@ const LeaderBoard = () => {
   return (
     <div className="leaderboard-container max-w-5xl mx-auto mt-8 bg-gray-50 rounded-lg shadow-lg border border-red-500">
       <h2 className="text-3xl font-bold p-4 text-center text-white bg-red-700 rounded-t-lg shadow-md">
-        Leaderboard
+        Leaderboard for {course} - {batch}
       </h2>
 
       <table className="w-full text-left">
@@ -76,13 +83,16 @@ const LeaderBoard = () => {
               } hover:bg-red-200 transition-colors`}
             >
               <td className="py-4 px-4 text-navy-900 font-semibold">
-                {student.OrderDate}
+                {student.Name}
+                {/* Change this to the appropriate field for student name */}
               </td>
               <td className="py-4 px-4 text-navy-900 flex items-center">
                 {getBadgeIcon(student.badge)}
-                <span className="ml-2 font-semibold">{student.Manager}</span>
+                <span className="ml-2 font-semibold">{student.badge}</span>
               </td>
-              <td className="py-4 px-4 text-navy-800">{student.SalesMan}</td>
+              <td className="py-4 px-4 text-navy-800">
+                {student.saturdayMainsTest}
+              </td>
               <td className="py-4 px-4 text-navy-800">{student.mcq}</td>
               <td className="py-4 px-4 text-navy-800">
                 {student.groupDiscussion}

@@ -12,7 +12,7 @@ const FastTrackForm = () => {
   const [editData, setEditData] = useState({});
   const [editMode, setEditMode] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const FastTrackForm = () => {
         const sortedData = fetchedData.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-  
+
         setFastTrackData(sortedData);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -86,6 +86,55 @@ const FastTrackForm = () => {
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Function to render page numbers with ellipses
+  const renderPagination = () => {
+    const pages = [];
+    const maxPagesToShow = 3;
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage > 1) {
+        pages.push(1);
+      }
+      if (currentPage > 2) {
+        pages.push('...');
+      }
+      const startPage = Math.max(2, currentPage - 1);
+      const endPage = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      if (currentPage < totalPages - 1) {
+        pages.push('...');
+      }
+      if (currentPage < totalPages) {
+        pages.push(totalPages);
+      }
+    }
+
+    return pages.map((page, index) => (
+      <button
+        key={index}
+        onClick={() => {
+          if (typeof page === 'number') {
+            handlePageChange(page);
+          }
+        }}
+        className={`mr-2 ${
+          page === currentPage
+            ? 'bg-blue-500 text-white'
+            : 'bg-gray-300 hover:bg-gray-400 text-black'
+        } font-bold py-1 px-3 rounded`}
+        disabled={page === '...'}
+      >
+        {page}
+      </button>
+    ));
+  };
+
   // Export to Excel function
   const exportToExcel = () => {
     const workbook = XLSX.utils.book_new();
@@ -93,11 +142,6 @@ const FastTrackForm = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Fast Track Data'); // Add worksheet to workbook
     XLSX.writeFile(workbook, 'fastTrack_data.xlsx'); // Trigger the file download
   };
-
-  // Navigate to profile page
-  // const viewProfile = (id) => {
-  //   navigate(`/profile/${id}`); // Navigate to the profile page with the student's ID
-  // };
 
   return (
     <div className="p-6">
@@ -229,57 +273,39 @@ const FastTrackForm = () => {
                   <td key={i} className="py-2 px-4">
                     {editMode === data._id ? (
                       <input
-                        type={field === 'dateOfBirth' ? 'date' : 'text'}
+                        type="text"
                         name={field}
-                        value={editData[data._id]?.[field] || ''}
+                        value={editData[data._id][field] || ''}
                         onChange={(e) => handleChange(e, data._id)}
                         className="w-full p-2 border rounded"
                       />
-                    ) : field === 'dateOfBirth' ? (
-                      new Date(data[field]).toLocaleDateString()
                     ) : (
                       data[field]
                     )}
                   </td>
                 ))}
-                <td className="py-2 px-4">
+                <td className="py-2 px-4 flex space-x-2">
                   {editMode === data._id ? (
-                    <>
-                      <button
-                        onClick={() => updateData(data._id)}
-                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => {
-                          setEditMode(null);
-                          setEditData({});
-                        }}
-                        className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700"
-                      >
-                        Cancel
-                      </button>
-                    </>
+                    <button
+                      onClick={() => updateData(data._id)}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                    >
+                      Save
+                    </button>
                   ) : (
                     <>
                       <button
                         onClick={() => toggleEditMode(data._id)}
-                        className="px-3 py-1 rounded flex items-center"
+                        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
                       >
-                        <FaEdit className="text-blue-500 hover:text-blue-800" />
+                        <FaEdit />
                       </button>
                       <button
                         onClick={() => deleteData(data._id)}
-                        className="px-3 py-1 rounded flex items-center"
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                       >
-                        <FaTrashAlt className="text-red-500 hover:text-red-800" />
+                        <FaTrashAlt />
                       </button>
-                      <Link to={`/dashboard/${data._id}`}>
-                        <button className="px-3 py-1 rounded flex items-center">
-                          <FaUser className="text-green-500 hover:text-green-800" />
-                        </button>
-                      </Link>
                     </>
                   )}
                 </td>
@@ -294,27 +320,15 @@ const FastTrackForm = () => {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="mr-2 bg-gray-300 hover:bg-gray-400 text-white font-bold py-1 px-3 rounded"
+          className="mr-2 bg-gray-300 hover:bg-gray-400 text-black font-bold py-1 px-3 rounded"
         >
           Previous
         </button>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            className={`mr-2 ${
-              currentPage === index + 1
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-300 hover:bg-gray-400 text-black'
-            } font-bold py-1 px-3 rounded`}
-          >
-            {index + 1}
-          </button>
-        ))}
+        {renderPagination()}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="ml-2 bg-gray-300 hover:bg-gray-400 text-white font-bold py-1 px-3 rounded"
+          className="ml-2 bg-gray-300 hover:bg-gray-400 text-black font-bold py-1 px-3 rounded"
         >
           Next
         </button>

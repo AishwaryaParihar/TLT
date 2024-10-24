@@ -7,7 +7,6 @@ import SummaryApi from '../Common/SummaryApi';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 
-
 const TpmData = () => {
   const [tpmData, setTpmData] = useState([]);
   const [editData, setEditData] = useState({});
@@ -27,10 +26,10 @@ const TpmData = () => {
         method: SummaryApi.TpmData.method,
       });
       if (result.status === 200) {
-         const sortedData = result.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      setTpmData(sortedData);
+        const sortedData = result.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setTpmData(sortedData);
       } else {
         toast.error(result.data.message || 'Failed to fetch data');
       }
@@ -93,20 +92,54 @@ const TpmData = () => {
   const currentItems = tpmData.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(tpmData.length / itemsPerPage);
 
- // Export to Excel function
- const exportToExcel = () => {
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(tpmData); // Convert data to worksheet
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'TPM Form Data'); // Add worksheet to workbook
-  XLSX.writeFile(workbook, 'TPM_data.xlsx'); // Trigger the file download
-};
+  // Export to Excel function
+  const exportToExcel = () => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(tpmData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'TPM Form Data');
+    XLSX.writeFile(workbook, 'TPM_data.xlsx');
+  };
 
+  // Get pagination numbers
+  const getPaginationNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 3;
+
+    // Calculate start and end page
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    // Adjust if we are near the beginning or end
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    // Add ellipses if needed
+    if (startPage > 1) {
+      pages.unshift('...');
+      if (startPage > 2) {
+        pages.unshift(1);
+      }
+    }
+    if (endPage < totalPages) {
+      pages.push('...');
+      if (endPage < totalPages - 1) {
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
 
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">TPM Data</h2>
       {/* Export to Excel Button */}
- <button
+      <button
         onClick={exportToExcel}
         className="mb-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
       >
@@ -216,15 +249,15 @@ const TpmData = () => {
                         <>
                           <button
                             onClick={() => toggleEditMode(data._id)}
-                            className="px-3 py-1 rounded flex items-center"
+                            className="text-blue-500 hover:underline"
                           >
-                            <FaEdit className="text-blue-500 hover:text-blue-800" />
+                            <FaEdit />
                           </button>
                           <button
                             onClick={() => deleteTpmData(data._id)}
-                            className="px-3 py-1 rounded flex items-center"
+                            className="text-red-500 hover:underline"
                           >
-                            <FaTrashAlt className="text-red-500 hover:text-red-700" />
+                            <FaTrashAlt />
                           </button>
                         </>
                       )}
@@ -233,21 +266,41 @@ const TpmData = () => {
                 ))}
               </tbody>
             </table>
+
             {/* Pagination Controls */}
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-center gap-1 items-center mt-4">
               <button
-                disabled={currentPage === 1}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                disabled={currentPage === 1}
+                className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
               >
                 Previous
               </button>
+
+              <div>
+                {getPaginationNumbers().map((number, index) => (
+                  <span
+                    key={index}
+                    className={`mx-1 cursor-pointer ${
+                      number === currentPage
+                        ? 'font-bold text-white bg-blue-500 px-2 py-1'
+                        : 'text-blue-400'
+                    }`}
+                    onClick={() => {
+                      if (number !== '...') {
+                        setCurrentPage(number);
+                      }
+                    }}
+                  >
+                    {number}
+                  </span>
+                ))}
+              </div>
+
               <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                className="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+                className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
               >
                 Next
               </button>

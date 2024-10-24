@@ -24,13 +24,14 @@ export const router = createBrowserRouter([
         element: <Sidebar />,
         children: [
           {
-            path: 'leaderboard',
-            element: <LeaderBoard />,
-          },
-          {
             path: 'profile',
             element: <StudentProfile />,
           },
+          {
+            path: 'leaderboard',
+            element: <LeaderBoard />,
+          },
+         
         ],
       },
     ],

@@ -34,12 +34,11 @@ const PreviousYearForm = () => {
     }
   };
 
-  // Delete paper data with confirmation
   const deletePaper = async (id) => {
     const confirmDelete = window.confirm(
       'Are you sure you want to delete this paper?'
     );
-    if (!confirmDelete) return; // Exit if user cancels
+    if (!confirmDelete) return;
     try {
       await axios({
         url: SummaryApi.DeletePyPapersDetail.url.replace(':id', id),
@@ -50,12 +49,12 @@ const PreviousYearForm = () => {
       console.error('Error deleting paper:', error);
     }
   };
-  // Update paper data with confirmation
+
   const updatePaper = async (id) => {
     const confirmUpdate = window.confirm(
       'Are you sure you want to save the changes?'
     );
-    if (!confirmUpdate) return; // Exit if user cancels
+    if (!confirmUpdate) return;
     try {
       await axios({
         url: SummaryApi.UpdatePyPapersDetail.url.replace(':id', id),
@@ -86,26 +85,79 @@ const PreviousYearForm = () => {
   const currentPapers = allPapers.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(allPapers.length / itemsPerPage);
 
-  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   // Export to Excel function
   const exportToExcel = () => {
     const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.json_to_sheet(allPapers); // Convert data to worksheet
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      'Previous Year Paper Form Data'
-    ); // Add worksheet to workbook
-    XLSX.writeFile(workbook, 'previousYearPaper_data.xlsx'); // Trigger the file download
+    const worksheet = XLSX.utils.json_to_sheet(allPapers);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Previous Year Paper Form Data');
+    XLSX.writeFile(workbook, 'previousYearPaper_data.xlsx');
+  };
+
+  // Logic to limit pagination to 3 page numbers
+  const renderPagination = () => {
+    const maxPagesToShow = 2;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    const pages = [];
+    if (startPage > 1) {
+      pages.push(
+        <button
+          key={1}
+          onClick={() => handlePageChange(1)}
+          className={`mx-1 px-3 py-1 border rounded ${currentPage === 1 ? 'bg-blue-900 text-white' : 'bg-gray-200 text-gray-700'}`}
+        >
+          1
+        </button>
+      );
+      if (startPage > 2) {
+        pages.push(<span key="startEllipsis" className="mx-1">...</span>);
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`mx-1 px-3 py-1 border rounded ${currentPage === i ? 'bg-blue-900 text-white' : 'bg-gray-200 text-gray-700'}`}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        pages.push(<span key="endEllipsis" className="mx-1">...</span>);
+      }
+      pages.push(
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages)}
+          className={`mx-1 px-3 py-1 border rounded ${currentPage === totalPages ? 'bg-blue-900 text-white' : 'bg-gray-200 text-gray-700'}`}
+        >
+          {totalPages}
+        </button>
+      );
+    }
+
+    return pages;
   };
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">
-        Previous Year Paper Details
-      </h1>
-      {/* Export to Excel Button */}
+      <h1 className="text-2xl font-semibold mb-4">Previous Year Paper Details</h1>
       <button
         onClick={exportToExcel}
         className="mb-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -182,18 +234,18 @@ const PreviousYearForm = () => {
                     <td className="py-2 px-4 text-gray-600">
                       {new Date(paper.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-2 px-4 flex gap-2">
+                    <td className="py-2 px-4 text-gray-600 flex space-x-4">
                       {editMode === paper._id ? (
                         <>
                           <button
                             onClick={() => updatePaper(paper._id)}
-                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
+                            className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded"
                           >
                             Save
                           </button>
                           <button
                             onClick={() => setEditMode(null)}
-                            className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700"
+                            className="bg-gray-500 hover:bg-gray-700 text-white py-1 px-3 rounded"
                           >
                             Cancel
                           </button>
@@ -202,15 +254,15 @@ const PreviousYearForm = () => {
                         <>
                           <button
                             onClick={() => toggleEditMode(paper._id)}
-                            className="px-3 py-1 rounded flex items-center"
+                            className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-1 rounded"
                           >
-                            <FaEdit className="text-blue-500 hover:text-blue-800" />
+                            <FaEdit />
                           </button>
                           <button
                             onClick={() => deletePaper(paper._id)}
-                            className="px-3 py-1 rounded flex items-center"
+                            className="bg-red-500 hover:bg-red-700 text-white py-1 px-1 rounded"
                           >
-                            <FaTrashAlt className="text-red-500 hover:text-red-700" />
+                            <FaTrashAlt />
                           </button>
                         </>
                       )}
@@ -220,21 +272,23 @@ const PreviousYearForm = () => {
               </tbody>
             </table>
 
-            {/* Pagination Controls */}
+            {/* Pagination */}
             <div className="flex justify-center mt-4">
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => handlePageChange(i + 1)}
-                  className={`mx-1 px-3 py-1 border rounded ${
-                    currentPage === i + 1
-                      ? 'bg-blue-900 text-white'
-                      : 'bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                className="mx-1 px-3 py-1 border rounded bg-gray-200 text-gray-700"
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {renderPagination()}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                className="mx-1 px-3 py-1 border rounded bg-gray-200 text-gray-700"
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
             </div>
           </>
         )}

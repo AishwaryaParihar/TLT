@@ -20,11 +20,11 @@ const MpcjData = () => {
   const fetchAllData = async () => {
     try {
       const result = await axios({
-        url:SummaryApi.GetMPCJFormDetails.url,
-        method:SummaryApi.GetMPCJFormDetails.method
+        url: SummaryApi.GetMPCJFormDetails.url,
+        method: SummaryApi.GetMPCJFormDetails.method,
       });
       console.log('API Response:', result.data);
-  
+
       if (Array.isArray(result.data)) {
         const sortedPapers = result.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -44,10 +44,10 @@ const MpcjData = () => {
     if (window.confirm('Are you sure you want to delete this entry?')) {
       try {
         const urldata = SummaryApi.DeleteMPCJFormDetails.url.replace(':id', id);
-             await axios({
-              url: urldata,
-              method: SummaryApi.DeleteMPCJFormDetails.method,
-            });
+        await axios({
+          url: urldata,
+          method: SummaryApi.DeleteMPCJFormDetails.method,
+        });
         toast.success('Data deleted successfully!');
         fetchAllData();
       } catch (error) {
@@ -72,7 +72,6 @@ const MpcjData = () => {
           method: SummaryApi.UpdateMPCJFormDetails.method,
           data: editData[id],
         });
-        toast
         setEditMode(null); // Exit edit mode after updating
         fetchAllData(); // Fetch updated data
         toast.success('Data updated successfully!');
@@ -88,6 +87,7 @@ const MpcjData = () => {
     setEditData({ [id]: mpcjData.find((data) => data._id === id) });
   };
 
+  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentData = mpcjData.slice(indexOfFirstItem, indexOfLastItem);
@@ -105,6 +105,31 @@ const MpcjData = () => {
     if (currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1);
     }
+  };
+
+  const getPaginationNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 3; // Maximum number of visible page numbers
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      const leftEllipsis = currentPage > 2; // Show left ellipsis if current page is greater than 2
+      const rightEllipsis = currentPage < totalPages - 1; // Show right ellipsis if current page is less than total pages - 1
+
+      if (currentPage === 1) {
+        pages.push(1, 2, rightEllipsis && '...');
+        if (rightEllipsis) pages.push(totalPages);
+      } else if (currentPage === totalPages) {
+        pages.push(1, leftEllipsis && '...', totalPages - 1, totalPages);
+      } else {
+        pages.push(1, leftEllipsis && '...', currentPage - 1, currentPage, currentPage + 1, rightEllipsis && '...', totalPages);
+      }
+    }
+
+    return pages.filter(Boolean); // Remove any false values (like ellipsis)
   };
 
   const exportToExcel = () => {
@@ -142,14 +167,10 @@ const MpcjData = () => {
               <tbody>
                 {currentData.map((data, index) => (
                   <tr
-                    className={`border-b border-gray-200 ${
-                      index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                    } hover:bg-gray-100`}
+                    className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-gray-100`}
                     key={data._id}
                   >
-                    <td className="py-2 px-4 text-gray-600">
-                      {indexOfFirstItem + index + 1}
-                    </td>
+                    <td className="py-2 px-4 text-gray-600">{indexOfFirstItem + index + 1}</td>
                     <td className="py-2 px-4 text-gray-600">
                       {editMode === data._id ? (
                         <input
@@ -190,35 +211,27 @@ const MpcjData = () => {
                       )}
                     </td>
                     <td className="py-2 px-4 text-gray-600">
-                      {moment(data.createdAt).format('LL')}
+                      {moment(data.createdAt).format('YYYY-MM-DD')}
                     </td>
-                    <td className="py-2 px-4 flex gap-2">
+                    <td className="py-2 px-4 text-gray-600">
                       {editMode === data._id ? (
-                        <>
-                          <button
-                            onClick={() => updateData(data._id)}
-                            className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={() => setEditMode(null)}
-                            className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700"
-                          >
-                            Cancel
-                          </button>
-                        </>
+                        <button
+                          onClick={() => updateData(data._id)}
+                          className="text-blue-500 hover:text-blue-700 mr-2"
+                        >
+                          Save
+                        </button>
                       ) : (
                         <>
                           <button
                             onClick={() => toggleEditMode(data._id)}
-                            className="text-blue-500 px-3 py-1 rounded hover:text-blue-700"
+                            className="text-blue-500 hover:text-blue-700 mr-2"
                           >
                             <FaEdit />
                           </button>
                           <button
                             onClick={() => deleteData(data._id)}
-                            className="text-red-500 px-3 py-1 rounded hover:text-red-700"
+                            className="text-red-500 hover:text-red-700"
                           >
                             <FaTrashAlt />
                           </button>
@@ -230,40 +243,30 @@ const MpcjData = () => {
               </tbody>
             </table>
 
-            {/* Pagination controls */}
-            <div className="mt-4 flex justify-center gap-2">
+            {/* Pagination */}
+            <div className="mt-4 flex justify-center gap-1 items-center">
               <button
                 onClick={goToPreviousPage}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-lg ${
-                  currentPage === 1
-                    ? 'bg-gray-300 text-gray-500'
-                    : 'bg-gray-200 text-gray-800 hover:bg-gray-400'
-                }`}
+                className={`py-1 px-2 bg-gray-300 rounded ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'}`}
               >
                 Previous
               </button>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  className={`px-4 py-2 mx-1 rounded-lg ${
-                    currentPage === i + 1
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 text-gray-800 hover:bg-gray-400'
-                  }`}
-                  onClick={() => handlePageChange(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))}
+              <div className="flex items-center">
+                {getPaginationNumbers().map((number, index) => (
+                  <span
+                    key={index}
+                    onClick={() => typeof number === 'number' && handlePageChange(number)}
+                    className={`py-1 px-2 border cursor-pointer ${number === currentPage ? 'bg-blue-500 text-white' : 'text-blue-500 hover:bg-blue-100'}`}
+                  >
+                    {number}
+                  </span>
+                ))}
+              </div>
               <button
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded-lg ${
-                  currentPage === totalPages
-                    ? 'bg-gray-300 text-gray-500'
-                    : 'bg-gray-200 text-gray-800 hover:bg-gray-400'
-                }`}
+                className={`py-1 px-2 bg-gray-300 rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-400'}`}
               >
                 Next
               </button>

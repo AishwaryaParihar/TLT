@@ -19,7 +19,7 @@ const EmpowermentForm = () => {
           method: SummaryApi.EmpowermentAdmin.method,
         });
         console.log(result);
-        const fetchedData= result.data.data || [];
+        const fetchedData = result.data.data || [];
         const sortedData = fetchedData.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -82,6 +82,42 @@ const EmpowermentForm = () => {
   const totalPages = Math.ceil(empowermentData.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Pagination numbers with ellipses logic
+  const getPaginationNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 3; // Maximum number of visible page numbers
+
+    if (totalPages <= maxVisiblePages) {
+      // If total pages are less than or equal to maxVisiblePages, show all
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      // Show first page
+      pageNumbers.push(1);
+      
+      // Handle the middle pages
+      if (currentPage > 2) {
+        pageNumbers.push('...');
+      }
+      if (currentPage - 1 > 1 && currentPage + 1 < totalPages) {
+        pageNumbers.push(currentPage - 1);
+      }
+      pageNumbers.push(currentPage);
+      if (currentPage + 1 < totalPages) {
+        pageNumbers.push(currentPage + 1);
+      }
+
+      // Show last page
+      if (currentPage < totalPages - 1) {
+        pageNumbers.push('...');
+        pageNumbers.push(totalPages);
+      }
+    }
+
+    return pageNumbers;
+  };
 
   // Export to Excel function
   const exportToExcel = () => {
@@ -146,9 +182,7 @@ const EmpowermentForm = () => {
             {currentForms.map((data, index) => (
               <tr
                 key={data._id}
-                className={`border-b border-gray-200 ${
-                  index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
-                }`}
+                className={`border-b border-gray-200 ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
               >
                 <td className="py-2 px-4">
                   {index + 1 + (currentPage - 1) * itemsPerPage}
@@ -221,20 +255,20 @@ const EmpowermentForm = () => {
                       </button>
                     </>
                   ) : (
-                    <>
+                    <div className='flex gap-2'>
                       <button
                         onClick={() => toggleEditMode(data._id)}
-                        className="px-3 py-1 rounded flex items-center"
+                        className="bg-blue-500 text-white p-1 rounded hover:bg-blue-700"
                       >
-                        <FaEdit className="text-blue-500 hover:text-blue-800" />
+                        <FaEdit />
                       </button>
                       <button
                         onClick={() => deleteData(data._id)}
-                        className="px-3 py-1 rounded flex items-center"
+                        className="bg-red-500 text-white p-1 rounded hover:bg-red-700"
                       >
-                        <FaTrashAlt className="text-red-500 hover:text-red-700" />
+                        <FaTrashAlt />
                       </button>
-                    </>
+                    </div>
                   )}
                 </td>
               </tr>
@@ -243,21 +277,39 @@ const EmpowermentForm = () => {
         </table>
       )}
 
-      {/* Pagination */}
-      <div className="flex justify-center space-x-2 mt-4">
-        {[...Array(totalPages)].map((_, pageNumber) => (
-          <button
-            key={pageNumber}
-            onClick={() => handlePageChange(pageNumber + 1)}
-            className={`px-3 py-1 rounded ${
-              currentPage === pageNumber + 1
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-300'
-            }`}
-          >
-            {pageNumber + 1}
-          </button>
-        ))}
+      {/* Pagination Controls */}
+      <div className="flex justify-center gap-1 items-center mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="bg-gray-300 text-gray-600 px-2 py-1 rounded hover:bg-gray-400 disabled:opacity-50"
+        >
+          Previous
+        </button>
+
+        <div className="flex items-center">
+          {getPaginationNumbers().map((num, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                if (typeof num === 'number') {
+                  handlePageChange(num);
+                }
+              }}
+              className={`mx-1 px-2 py-1 rounded ${num === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+            >
+              {num}
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="bg-gray-300 text-gray-600 px-2 py-1 rounded hover:bg-gray-400 disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

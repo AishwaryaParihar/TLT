@@ -1,17 +1,43 @@
+// const mongoose = require('mongoose');
+
+// const studentSchema = new mongoose.Schema({
+//   Name: String,
+//   Email: String,
+//   Password: String,
+//   Course: String,
+//   Item: String,
+//   Batch: String,
+//   BatchSection: String,
+//   Scores: Number,
+//   MCQ: Number,
+//   GroupDiscussion: Number,
+//   JudgmentWriting: String,
+//   Translation: String,
+//   Scores: Number,
+//   CreatedAt: Date,
+// });
+
+// const LeaderboardStudent = mongoose.model('LeaderboardStudent', studentSchema);
+// module.exports = LeaderboardStudent;
+
 const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema({
-  OrderDate: String,
-  Manager: String,
-  Region: String,
-  SalesMan: String,
-  Item: String,
-  batch: String,
-  batchSection: String,
-  // groupDiscussion: String,
-  // judgmentWriting: String,
-  // translation: String,
-  // score: Number,
+  Name: { type: String, required: true },
+  Email: { type: String, required: true, unique: true },
+  Course: { type: String, required: true },
+  Batch: { type: String },
+  BatchSection: { type: String },
+  SaturdayMainsTest: { type: Number, default: 0 },
+  MCQ: { type: Number, default: 0 },
+  GroupDiscussion: { type: Number, default: 0 },
+  JudgmentWriting: { type: Number, default: 0 },
+  Translation: { type: Number, default: 0 },
+  Badge: {
+    type: String,
+    enum: ['Gold', 'Silver', 'Bronze', 'None'],
+    default: 'None',
+  },
 });
 
 const LeaderboardStudent = mongoose.model('LeaderboardStudent', studentSchema);
