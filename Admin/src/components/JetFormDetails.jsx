@@ -131,12 +131,12 @@ const JetFormDetails = () => {
           </tr>
         </thead>
         <tbody>
-          {formData.map((form, index) => (
+        {currentForms.map((form, index) => (
             <tr
               key={form._id}
               className="border-b border-gray-200 hover:bg-gray-100"
             >
-              <td className="p-3">{index + 1}</td>
+              <td className="p-3">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
               <td className="p-3">
                 {editMode === form._id ? (
                   <input
@@ -362,102 +362,85 @@ const JetFormDetails = () => {
                 {editMode === form._id ? (
                   <input
                     type="text"
-                    name="accomodationRequirement"
-                    value={editData[form._id]?.accomodationRequirement || ''}
+                    name="accommodationRequirement"
+                    value={editData[form._id]?.accommodationRequirement || ''}
                     onChange={(e) => handleChange(e, form._id)}
                     className="border rounded p-1"
                   />
                 ) : (
-                  form.accomodationRequirement
+                  form.accommodationRequirement
                 )}
               </td>
               <td className="p-3">
-                <img
-                  className="w-[100px] h-[100px]"
-                  src={`${baseUrl}/${form.photo}`}
-                />
                 {form.photo && (
-                  <a
-                    href={`${baseUrl}/${form.photo}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View Photo
-                  </a>
+                  <img
+                    src={form.photo}
+                    alt="Form submission"
+                    className="h-16 w-16 object-cover"
+                  />
                 )}
               </td>
               <td className="p-3">
-              <img
-                  className="w-[100px] h-[100px]"
-                  src={`${baseUrl}/${form.adhaarPhoto}`}
-                />
-                {form.adhaarPhoto && (
-                  <a
-                    href={`${baseUrl}/${form.adhaarPhoto}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    View Aadhaar Photo
-                  </a>
+                {form.aadhaarPhoto && (
+                  <img
+                    src={form.aadhaarPhoto}
+                    alt="Aadhaar Photo"
+                    className="h-16 w-16 object-cover"
+                  />
                 )}
               </td>
-              {/* Created date */}
               <td className="p-3">
                 {moment(form.createdAt).format('YYYY-MM-DD')}
               </td>
-
-              {/* Actions */}
-              <td className="p-3">
+              <td className="p-3 flex space-x-2">
                 {editMode === form._id ? (
-                  <div>
-                    <button
-                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
-                      onClick={() => updateForm(form._id)}
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => setEditMode(null)}
-                      className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-700 ml-2"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                ) : (
                   <button
-                    className="text-blue-500 hover:text-blue-700"
-                    onClick={() => toggleEditMode(form._id)}
+                    onClick={() => updateForm(form._id)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                   >
-                    <FaEdit />
+                    Save
                   </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => toggleEditMode(form._id)}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => deleteForm(form._id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </>
                 )}
-                <button
-                  className="text-red-500 hover:text-red-700 ml-4"
-                  onClick={() => deleteForm(form._id)}
-                >
-                  <FaTrashAlt />
-                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            className={`mx-1 px-3 py-1 rounded ${
-              currentPage === index + 1
-                ? 'bg-gray-800 text-white'
-                : 'bg-gray-300'
-            }`}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </button>
-        ))}
+      {/* Pagination Controls */}
+      <div className="flex justify-center gap-2 items-center mt-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-2 rounded"
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-2 rounded"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

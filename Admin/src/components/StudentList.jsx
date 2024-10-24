@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
+import SummaryApi from '../Common/SummaryApi';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
@@ -20,7 +21,7 @@ const StudentList = () => {
   const fetchStudents = async () => {
     try {
       const response = await axios.get(
-        'https://sea-lion-app-uytpg.ondigitalocean.app/api/getStudents'
+        SummaryApi.getStudentList.url
       );
       setStudents(response.data);
     } catch (err) {
@@ -31,8 +32,11 @@ const StudentList = () => {
   const deleteStudent = async (id) => {
     if (window.confirm('Are you sure you want to delete this student?')) {
       try {
-        await axios.delete(
-          `https://sea-lion-app-uytpg.ondigitalocean.app/api/deleteStudent/${id}`
+        const api_url= SummaryApi.deleteStudentdata.url.replace(':id', id)
+        await axios(
+        {  url:api_url,
+          method: SummaryApi.deleteStudentdata.method
+        }
         );
         toast.success('Student deleted successfully!');
         fetchStudents();
@@ -52,9 +56,11 @@ const StudentList = () => {
   const updateStudent = async (id) => {
     if (window.confirm('Are you sure you want to update this student?')) {
       try {
-        await axios.put(
-          `https://sea-lion-app-uytpg.ondigitalocean.app/api/updateStudent/${id}`,
-          editData[id]
+        const api_url= SummaryApi.updateStudent.url.replace(':id', id)
+        await axios(
+        {  url:api_url,
+          method:SummaryApi.updateStudent.method,
+          data:editData[id]}
         );
         setEditMode(null); // Exit edit mode
         fetchStudents(); // Fetch updated data

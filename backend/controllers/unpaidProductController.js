@@ -48,9 +48,7 @@ exports.updateUnpaidFile = async (req, res) => {
 exports.deleteUnpaidFile = async (req, res) => {
   try {
     const unpaid = await UnpaidProduct.findByIdAndDelete(req.params.id);
-    if (unpaid.pdf) {
-      fs.unlinkSync(path.join(__dirname, '../unpaidProductUpload', unpaid.pdf)); // delete file from server
-    }
+    
     res.status(200).json({ message: 'Unpaid file deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete unpaid file', error });

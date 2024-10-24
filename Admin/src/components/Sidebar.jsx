@@ -27,7 +27,7 @@ const Sidebar = () => {
 
 
   return (
-    <div className="min-h-screen md:flex hidden bg-gray-100">
+    <div className="min-h-screen md:flex hidden ">
       {/* Sidebar */}
       <aside className="bg-red-600 w-64 customShadow text-white">
         {/* Profile Section */}
