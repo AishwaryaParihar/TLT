@@ -39,8 +39,8 @@ const LeaderboardUpload = () => {
       })
       .filter(Boolean);
 
-    setExcelData(updatedData);
-    storeData(updatedData);
+    setExcelData(excelJson);
+    storeData(excelJson);
   };
 
   const storeData = async (data) => {
