@@ -21,7 +21,6 @@ const LeaderboardUpload = () => {
       batch: selectedBatch,
       batchSection: selectedBatchSection,
     }));
-
     setExcelData(updatedData);
     storeData(updatedData);
   };
@@ -121,11 +120,12 @@ const LeaderboardUpload = () => {
                 } hover:bg-red-200 transition-colors`}
               >
                 <td className="py-4 px-4 text-navy-900 font-semibold">
-                  {student.OrderDate}
+                  {student.Name}
+                  {/* Change this to the appropriate field for student name */}
                 </td>
                 <td className="py-4 px-4 text-navy-900 flex items-center">
                   {getBadgeIcon(student.badge)}
-                  <span className="ml-2 font-semibold">{student.Region}</span>
+                  <span className="ml-2 font-semibold">{student.badge}</span>
                 </td>
                 <td className="py-4 px-4 text-navy-800">
                   {student.saturdayMainsTest}

@@ -1,59 +1,7 @@
-// const LeaderBoardSchema = require('../models/LeaderboardModel');
-
-// const createLeaderboard = async (req, res) => {
-//   const {
-//     OrderDate,
-//     Manager,
-//     SalesMan,
-//     Item,
-// groupDiscussion,
-// judgmentWriting,
-// translation,
-// score,
-// } = req.body;
-
-// if (
-//   !OrderDate ||
-//   !Manager ||
-//   !SalesMan ||
-//   !Item ||
-//   !groupDiscussion ||
-//   !judgmentWriting ||
-//   !translation ||
-//   !score
-// ) {
-//   return res
-//     .status(400)
-//     .json({ error: 'Name, email, and number are required fields.' });
-// }
-
-// try {
-//   const pyPapersDetail = new LeaderBoardSchema({
-//     OrderDate,
-//     Manager,
-//     SalesMan,
-//     Item,
-// groupDiscussion,
-// judgmentWriting,
-// translation,
-// score,
-//     });
-//     await pyPapersDetail.save();
-//     res.status(201).json(pyPapersDetail);
-//   } catch (error) {
-//     console.error('Error saving pyPaper details:', error);
-//     res.status(500).json({ error: 'Error saving pyPaper details' });
-//   }
-// };
-
-// module.exports = {
-//   createLeaderboard,
-// };
-
 const LeaderBoardSchema = require('../models/LeaderboardModel');
 
 const createLeaderboard = async (req, res) => {
-  console.log(req.body);
+  console.log('Received data:', req.body); // Log the incoming data
   const students = req.body;
 
   if (!Array.isArray(students)) {
@@ -67,7 +15,9 @@ const createLeaderboard = async (req, res) => {
     res.status(201).json(results);
   } catch (error) {
     console.error('Error saving student details:', error);
-    res.status(500).json({ error: 'Error saving student details' });
+    res
+      .status(500)
+      .json({ error: 'Error saving student details', details: error.message });
   }
 };
 

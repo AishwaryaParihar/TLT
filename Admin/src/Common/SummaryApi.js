@@ -367,7 +367,7 @@ const SummaryApi = {
     method: 'post',
   },
 
-    // student list
+  // student list
   getStudents: {
     url: `${backendDomain}/api/getStudents`,
     method: 'post',
@@ -384,12 +384,11 @@ const SummaryApi = {
     url: `${backendDomain}/api/deleteStudent/:id`,
     method: 'delete',
   },
- 
+
   getStudentList: {
     url: `${backendDomain}/api/getStudents`,
     method: 'get',
   },
-
 
   //Subadmin controllers
   signUp: {
